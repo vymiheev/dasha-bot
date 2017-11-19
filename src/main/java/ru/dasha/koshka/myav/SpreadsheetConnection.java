@@ -12,7 +12,11 @@ import com.google.api.services.sheets.v4.SheetsRequestInitializer;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,9 +48,10 @@ public class SpreadsheetConnection {
      * @throws IOException
      */
     public static Sheets getSheetsService() throws IOException {
+        byte[] bytes = Files.readAllBytes(Paths.get(System.getProperty("user.dir") + File.separator + API_KEY_FILE));
         return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, null)
                 .setApplicationName(APPLICATION_NAME)
-                .setSheetsRequestInitializer(new SheetsRequestInitializer(API_KEY))
+                .setSheetsRequestInitializer(new SheetsRequestInitializer(new String(bytes)))
                 .build();
     }
 
