@@ -4,7 +4,10 @@ gradlew.bat
 *.iml
 *.class
 *.out
+*.log
 
-*.gradle/
-*.idea/
+.gradle/
+.idea/
 gradle/
+out/
+build/

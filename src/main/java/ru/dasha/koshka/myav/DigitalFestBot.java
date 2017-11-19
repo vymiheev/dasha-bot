@@ -1,10 +1,8 @@
 package ru.dasha.koshka.myav;
 
 import com.vdurmont.emoji.EmojiParser;
-import ru.dasha.koshka.model.ActivityType;
-import ru.dasha.koshka.model.FestActivity;
-import ru.dasha.koshka.model.FestCourse;
-import ru.dasha.koshka.model.FestSchedule;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendSticker;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
@@ -19,6 +17,10 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboar
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
+import ru.dasha.koshka.model.ActivityType;
+import ru.dasha.koshka.model.FestActivity;
+import ru.dasha.koshka.model.FestCourse;
+import ru.dasha.koshka.model.FestSchedule;
 import ru.dasha.koshka.utils.DBUtils;
 import ru.dasha.koshka.utils.ScheduleUtils;
 
@@ -29,6 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class DigitalFestBot extends TelegramLongPollingBot {
+    private static final Logger logger = LogManager.getLogger(DigitalFestBot.class.getName());
     private static final String BOT_TOKEN = "454379716:AAGuvTIuqe2ElAxiTt6G3tUGhYla2h4Cx8Q";
 
     private static final String CHOOSE_SCHEDULE_MESSAGE = "Выбери интересующую тебя категорию:";
@@ -76,7 +79,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
             if (chatId != null) {
                 sendMessage(chatId, "Упссс! Произошла ошибка при обновлении расписания. Обратитесь к разработчику!", null);
             }
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -174,7 +177,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
             try {
                 execute(enterSecretWordMessage);
             } catch (TelegramApiException e) {
-                e.printStackTrace();
+               logger.error(e.getMessage(), e);
             }*/
         }
     }
@@ -215,7 +218,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -227,7 +230,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
         try {
             execute(editMessageText);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -237,7 +240,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
                     setChatId(chatId).
                     setSticker(stickerName));
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -267,7 +270,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -301,7 +304,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
         try {
             execute(nextActivityMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -347,7 +350,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
         try {
             execute(wrongAnswerMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -392,7 +395,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
         try {
             execute(childOrParentMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -459,7 +462,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
         try {
             execute(chooseActivityMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -535,7 +538,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
             try {
                 new MySqlDbConnection();
             } catch (URISyntaxException | SQLException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
             List<Long> chatIds = DBUtils.getChatIds();
             //todo убрать!!!!!!!!
@@ -549,7 +552,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(), e);
                     }
                 }
                 createFinalMessage(chatIds.get(i));
@@ -580,7 +583,7 @@ public class DigitalFestBot extends TelegramLongPollingBot {
         try {
             execute(doYouLikeMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

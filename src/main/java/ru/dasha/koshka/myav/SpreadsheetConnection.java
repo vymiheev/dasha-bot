@@ -11,16 +11,20 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsRequestInitializer;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ru.dasha.koshka.DashaKoshka;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
 public class SpreadsheetConnection {
+    private static final Logger logger = LogManager.getLogger(SpreadsheetConnection.class.getName());
     private static final String APPLICATION_NAME = "Dasha Quickstart";
     private static final java.io.File DATA_STORE_DIR = new java.io.File(
             System.getProperty("user.home"), ".credentials/sheets.googleapis.com-java-quickstart");
@@ -36,7 +40,7 @@ public class SpreadsheetConnection {
             HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
         } catch (Throwable t) {
-            t.printStackTrace();
+            logger.error(t.getMessage(), t);
             System.exit(1);
         }
     }
@@ -47,8 +51,43 @@ public class SpreadsheetConnection {
      * @return an authorized Sheets API client service
      * @throws IOException
      */
-    public static Sheets getSheetsService() throws IOException {
-        byte[] bytes = Files.readAllBytes(Paths.get(System.getProperty("user.dir") + File.separator + API_KEY_FILE));
+    public static Sheets getSheetsService() throws IOException, URISyntaxException {
+/*        logger.debug(DashaKoshka.class.getResource(".").toString());
+        byte[] bytes = new byte[0];
+        try {
+            bytes = Files.readAllBytes(Paths.get(DashaKoshka.class.getResource("../../../../conf/" + API_KEY_FILE).toURI()));
+            logger.debug(bytes.length);
+            logger.debug("success");
+        } catch (Exception e) {
+            try {
+                bytes = Files.readAllBytes(Paths.get(DashaKoshka.class.getResource("../../../conf/" + API_KEY_FILE).toURI()));
+                logger.debug(bytes.length);
+                logger.debug("success");
+            } catch (Exception e1) {
+                try {
+                    bytes = Files.readAllBytes(Paths.get(DashaKoshka.class.getResource("../../conf/" + API_KEY_FILE).toURI()));
+                    logger.debug(bytes.length);
+                    logger.debug("success");
+                } catch (Exception e2) {
+                    try {
+                        bytes = Files.readAllBytes(Paths.get(DashaKoshka.class.getResource("../conf/" + API_KEY_FILE).toURI()));
+                        logger.debug(bytes.length);
+                        logger.debug("success");
+                    } catch (Exception e3) {
+                        try {
+                            bytes = Files.readAllBytes(Paths.get(DashaKoshka.class.getResource("conf/" + API_KEY_FILE).toURI()));
+                            logger.debug(bytes.length);
+                            logger.debug("success");
+                        } catch (Exception e4) {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        logger.info(new String(bytes));*/
+        byte[] bytes = Files.readAllBytes(Paths.get("conf" + File.separator + API_KEY_FILE));
         return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, null)
                 .setApplicationName(APPLICATION_NAME)
                 .setSheetsRequestInitializer(new SheetsRequestInitializer(new String(bytes)))
@@ -71,9 +110,14 @@ public class SpreadsheetConnection {
     }*/
 
     public static ValueRange getDataRange(String range) throws IOException {
-        return getSheetsService().spreadsheets().values().
-                get(SPREADSHEET_ID, range).
-                execute();
+        try {
+            return getSheetsService().spreadsheets().values().
+                    get(SPREADSHEET_ID, range).
+                    execute();
+        } catch (URISyntaxException e) {
+            logger.error(e.getMessage(), e);
+            throw new IOException(e);
+        }
     }
 
 }

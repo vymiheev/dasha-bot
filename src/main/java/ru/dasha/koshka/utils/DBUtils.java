@@ -1,5 +1,7 @@
 package ru.dasha.koshka.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.dasha.koshka.myav.MySqlDbConnection;
 
 import java.sql.*;
@@ -10,6 +12,7 @@ import java.util.List;
  * Created by Daria on 10.11.2017.
  */
 public class DBUtils {
+    private static final Logger logger = LogManager.getLogger(DBUtils.class.getName());
 
     public static void createUser(long id, boolean isChild, String userName) {
         Connection conn = null;
@@ -23,7 +26,7 @@ public class DBUtils {
                 st.execute();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
@@ -40,7 +43,7 @@ public class DBUtils {
                 st.execute();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
@@ -60,7 +63,7 @@ public class DBUtils {
                 return st.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
@@ -81,7 +84,7 @@ public class DBUtils {
                 st.executeUpdate();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
@@ -101,7 +104,7 @@ public class DBUtils {
                 st.executeQuery();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
@@ -123,7 +126,7 @@ public class DBUtils {
                 return res;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
@@ -146,7 +149,7 @@ public class DBUtils {
                 return res;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
@@ -170,7 +173,7 @@ public class DBUtils {
                 return res;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
@@ -193,7 +196,7 @@ public class DBUtils {
                 return res;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
@@ -216,7 +219,7 @@ public class DBUtils {
                 return res;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
@@ -238,7 +241,7 @@ public class DBUtils {
                 return chatIds;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
@@ -250,7 +253,7 @@ public class DBUtils {
             try {
                 conn.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
     }

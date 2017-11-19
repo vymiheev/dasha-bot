@@ -1,5 +1,7 @@
 package ru.dasha.koshka;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
@@ -13,19 +15,24 @@ import java.sql.SQLException;
  * Created by Daria on 07.11.2017.
  */
 public class DashaKoshka {
-    public static void main(String[] args) {
+    private static final Logger logger = LogManager.getLogger(DashaKoshka.class.getName());
 
+    public static void main(String[] args) {
         ApiContextInitializer.init();
         TelegramBotsApi botsApi = new TelegramBotsApi();
         try {
+            logger.info("Init bot...");
             botsApi.registerBot(new DigitalFestBot());
+            logger.info("Bot registered.");
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         try {
+            logger.info("Init db connection...");
             new MySqlDbConnection();
+            logger.info("DB connection acquired!.");
         } catch (URISyntaxException | SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 }

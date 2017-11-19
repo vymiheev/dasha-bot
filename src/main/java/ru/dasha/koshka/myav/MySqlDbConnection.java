@@ -1,12 +1,15 @@
 package ru.dasha.koshka.myav;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class MySqlDbConnection {
+    private static final Logger logger = LogManager.getLogger(MySqlDbConnection.class.getName());
     private static BasicDataSource connectionPool;
 
     private static final String DB_HOST = "178.62.240.115";
@@ -37,7 +40,7 @@ public class MySqlDbConnection {
         try {
             return connectionPool.getConnection();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return null;
     }

@@ -1,5 +1,7 @@
 package ru.dasha.koshka.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.dasha.koshka.model.ActivityType;
 import ru.dasha.koshka.model.FestActivity;
 import ru.dasha.koshka.model.FestCourse;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
  * Created by Daria on 08.11.2017.
  */
 public class ScheduleUtils {
+    private static final Logger logger = LogManager.getLogger(ScheduleUtils.class.getName());
     private static final Pattern timePattern = Pattern.compile("(\\d*:\\d*)-(\\d*:\\d*)");
     private static final Pattern agePatternRange = Pattern.compile("(\\d*)-(\\d*)");
     private static final Pattern agePatternSinglePlus = Pattern.compile("(\\d*)\\+");
@@ -32,7 +35,7 @@ public class ScheduleUtils {
         String range = "'Расписание лекций'";
         List<List<Object>> values = SpreadsheetConnection.getDataRange(range).getValues();
         if (values == null || values.size() == 0) {
-            System.out.println("No data found.");
+            logger.warn("No data found.");
             return null;
         }
         int sectionsNum = values.get(0).size() / SECTION_SIZE + (values.get(0).size() % SECTION_SIZE == 0 ? 0 : 1);
@@ -156,7 +159,7 @@ public class ScheduleUtils {
                     result.set(1, timeFormatter.parse(m.group(2)));
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
         return result;
