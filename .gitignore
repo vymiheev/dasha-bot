@@ -1,7 +1,8 @@
-*.secret
 gradlew
 gradlew.bat
-.iml
-.idea/
-.gradle/
+*.secret
+*.iml
+
+*.gradle/
+*.idea/
 gradle/
